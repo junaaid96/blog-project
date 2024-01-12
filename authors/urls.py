@@ -1,6 +1,9 @@
 from django.urls import path
-from authors.views import add_author
+from authors.views import registration, user_login, profile, user_logout
 
 urlpatterns = [
-    path('add/', add_author, name='add_author')
+    path('registration/', registration, name='registration'),
+    path('login/', user_login, name='login'),
+    path('logout/', user_logout, name='logout'),
+    path('profile/', profile, name='profile'),
 ]

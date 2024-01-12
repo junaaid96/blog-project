@@ -1,6 +1,6 @@
 from django.db import models
 from categories.models import Category
-from authors.models import Author
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -12,7 +12,7 @@ class Post(models.Model):
     category = models.ManyToManyField(Category)
     # one post can have only one author and one author can have many posts. So we use ForeignKey.
     # on_delete=models.CASCADE means if we delete an author, all the posts of that author will be deleted.
-    author = models.ForeignKey(Author, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     # if we want to keep the posts of an author even if we delete the author, we can use on_delete=models.SET_NULL
     # author = models.ForeignKey(Author, on_delete=models.SET_NULL, null=True)
     

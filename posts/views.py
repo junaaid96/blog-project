@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
 from . import forms
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
-
+@login_required
 def add_post(request):
     # user sending post request to add post
     if request.method == 'POST':
@@ -11,6 +12,7 @@ def add_post(request):
         post_form = forms.PostForm(request.POST)
         # check whether it's valid.
         if post_form.is_valid():
+            post_form.instance.author = request.user
             # process the data in form.cleaned_data as required. (saving the data to the database.)
             post_form.save()
             # redirect to a new URL
@@ -21,7 +23,7 @@ def add_post(request):
     # render the template depending on the request. (displaying the form.)
     return render(request, 'add_post.html', {'post_form': post_form})
 
-
+@login_required
 def edit_post(request, post_id):
     # get the post from the database
     post = forms.Post.objects.get(pk=post_id)
@@ -31,6 +33,7 @@ def edit_post(request, post_id):
         # here request.POST and instance=post both are required. so that if user doesn't change anything, it will save the previous data.
         post_form = forms.PostForm(request.POST, instance=post)
         if post_form.is_valid():
+            post_form.instance.author = request.user
             post_form.save()
             return redirect('home')
     else:
@@ -38,7 +41,7 @@ def edit_post(request, post_id):
         post_form = forms.PostForm(instance=post)
     return render(request, 'add_post.html', {'post_form': post_form})
 
-
+@login_required
 def delete_post(request, post_id):
     # we can use models.Post.objects.get also both are same here.
     post = forms.Post.objects.get(pk=post_id)
